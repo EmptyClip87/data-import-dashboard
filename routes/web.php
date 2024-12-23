@@ -19,3 +19,6 @@ Route::get('/', function () {
     return redirect()->route('login'); // Redirects to the login route
 });
 
+Route::middleware(['role:admin'])->group(function () {
+    Route::resource('users', 'UserController');
+});
