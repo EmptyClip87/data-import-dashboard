@@ -22,3 +22,6 @@ Route::get('/', function () {
 Route::middleware(['role:admin'])->group(function () {
     Route::resource('users', 'UserController');
 });
+Route::middleware(['role:admin'])->group(function () {
+    Route::resource('permissions', 'PermissionController');
+});
