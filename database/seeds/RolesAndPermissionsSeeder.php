@@ -14,15 +14,13 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         // Create permissions
         Permission::create(['name' => 'user-management']);
-        Permission::create(['name' => 'import-data']);
         Permission::create(['name' => 'import-orders']);
 
         // Create roles and assign permissions
         $admin = Role::create(['name' => 'admin']);
         $admin->givePermissionTo('user-management');
-        $admin->givePermissionTo('import-data');
+        $admin->givePermissionTo('import-orders');
 
-        $editor = Role::create(['name' => 'member']);
-        $editor->givePermissionTo('import-data');
+        $member = Role::create(['name' => 'member']);
     }
 }

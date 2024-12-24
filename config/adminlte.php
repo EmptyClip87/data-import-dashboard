@@ -145,7 +145,7 @@ return [
         ],
         [
             'text' => 'Data Import',
-            'url'  => 'admin/pages',
+            'url'  => 'import',
             'icon' => 'fas fa-fw fa-cubes',
         ],
         [
@@ -155,7 +155,7 @@ return [
         ],
         [
             'text' => 'Imports',
-            'url'  => 'admin/settings',
+            'url'  => 'imports',
             'icon' => 'fas fa-fw fa-cubes',
         ],
     ],
