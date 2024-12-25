@@ -68,26 +68,6 @@
     </div>
 @stop
 
-@section('css')
-    <style>
-        .box {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .form-control-sm {
-            display: inline-block;
-            width: 100%;
-        }
-        .inline-form {
-            display: flex;
-            align-items: center;
-        }
-        .save-btn {
-            margin-right: 5px;
-        }
-    </style>
-@stop
-
 @section('js')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -117,32 +97,87 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Add new permission row to the table
+                            // Create table row
                             const newRow = document.createElement('tr');
-                            newRow.innerHTML = `
-                                <td>${data.permission.id}</td>
-                                <td>
-                                    <form action="{{ route('permissions.update', ':id') }}".replace(':id', data.permission.id) method="POST" class="inline-form">
-                                        @csrf
-                            @method('PUT')
-                            <input type="text" name="name" class="form-control form-control-sm permission-name"
-                                   value="${data.permission.name}" data-original-name="${data.permission.name}" required>
-                                        <button type="submit" class="btn btn-success btn-sm save-btn" disabled>
-                                            <i class="fas fa-check"></i> Save
-                                        </button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form action="{{ route('permissions.destroy', ':id') }}".replace(':id', data.permission.id) method="POST" style="display: inline-block;">
-                                        @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this permission?')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-`;
+
+                            // Create ID cell
+                            const idCell = document.createElement('td');
+                            idCell.textContent = data.permission.id;
+                            newRow.appendChild(idCell);
+
+                            // Create permission name cell
+                            const nameCell = document.createElement('td');
+                            const updateForm = document.createElement('form');
+                            updateForm.action = `{{ route('permissions.update', ':id') }}`.replace(':id', data.permission.id);
+                            updateForm.method = 'POST';
+                            updateForm.classList.add('inline-form');
+
+                            const csrfInput = document.createElement('input');
+                            csrfInput.type = 'hidden';
+                            csrfInput.name = '_token';
+                            csrfInput.value = '{{ csrf_token() }}';
+                            updateForm.appendChild(csrfInput);
+
+                            const methodInput = document.createElement('input');
+                            methodInput.type = 'hidden';
+                            methodInput.name = '_method';
+                            methodInput.value = 'PUT';
+                            updateForm.appendChild(methodInput);
+
+                            const nameInput = document.createElement('input');
+                            nameInput.type = 'text';
+                            nameInput.name = 'name';
+                            nameInput.classList.add('form-control', 'form-control-sm', 'permission-name');
+                            nameInput.value = data.permission.name;
+                            nameInput.setAttribute('data-original-name', data.permission.name);
+                            nameInput.required = true;
+                            updateForm.appendChild(nameInput);
+
+                            const saveButton = document.createElement('button');
+                            saveButton.type = 'submit';
+                            saveButton.classList.add('btn', 'btn-success', 'btn-sm', 'save-btn');
+                            saveButton.disabled = true;
+                            saveButton.innerHTML = '<i class="fas fa-check"></i> Save';
+                            updateForm.appendChild(saveButton);
+
+                            nameCell.appendChild(updateForm);
+                            newRow.appendChild(nameCell);
+
+                            // Create actions cell
+                            const actionsCell = document.createElement('td');
+
+                            // Create delete form
+                            const deleteForm = document.createElement('form');
+                            deleteForm.action = `{{ route('permissions.destroy', ':id') }}`.replace(':id', data.permission.id);
+                            deleteForm.method = 'POST';
+                            deleteForm.style.display = 'inline-block';
+
+                            const deleteCsrfInput = document.createElement('input');
+                            deleteCsrfInput.type = 'hidden';
+                            deleteCsrfInput.name = '_token';
+                            deleteCsrfInput.value = '{{ csrf_token() }}';
+                            deleteForm.appendChild(deleteCsrfInput);
+
+                            const deleteMethodInput = document.createElement('input');
+                            deleteMethodInput.type = 'hidden';
+                            deleteMethodInput.name = '_method';
+                            deleteMethodInput.value = 'DELETE';
+                            deleteForm.appendChild(deleteMethodInput);
+
+                            const deleteButton = document.createElement('button');
+                            deleteButton.type = 'submit';
+                            deleteButton.classList.add('btn', 'btn-danger', 'btn-sm');
+                            deleteButton.onclick = () => confirm('Are you sure you want to delete this permission?');
+                            deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+                            deleteForm.appendChild(deleteButton);
+
+                            actionsCell.appendChild(deleteForm);
+                            newRow.appendChild(actionsCell);
+
+                            // Append the new row to the table
                             permissionsList.appendChild(newRow);
+
+                            // Reset form and hide
                             createPermissionForm.reset();
                             addPermissionForm.style.display = 'none';
                         } else {

@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Traits\HasRoles;
@@ -51,5 +50,9 @@ class User extends Authenticatable
     public function getPermissionAttribute()
     {
         return $this->getAllPermissions();
+    }
+    public function imports()
+    {
+        return $this->hasMany(Import::class);
     }
 }

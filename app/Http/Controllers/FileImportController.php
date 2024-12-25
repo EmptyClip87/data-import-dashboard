@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Import;
+use App\Imports\StandardOrderImport;
 use App\Jobs\ProcessFileImport;
-use App\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
-use Spatie\Permission\Models\Role;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FileImportController extends Controller
 {
@@ -38,21 +40,47 @@ class FileImportController extends Controller
      */
     public function process(Request $request)
     {
-        $importType = $request->input('import_type');
-        $config = config("import_types.$importType");
+        // Validate import type
+        $request->validate([
+            'import_type' => 'required',
+        ]);
 
-        if (!$config || !auth()->user()->can($config['permission_required'])) {
+        $importType = $request->input('import_type');
+        $configType = config("import_types.$importType");
+
+        // Check if the config exists and if the user has permission
+        if (!$configType || !auth()->user()->can($configType['permission_required'])) {
             return back()->with('error', 'Unauthorized or invalid import type.');
         }
 
-        $files = $config['files'];
+        $files = $configType['files'];
+
+        // Check if at least one file is uploaded
+        $importedFiles = [];
+        $importedFilesNames = [];
         foreach ($files as $key => $file) {
             if ($request->hasFile($key)) {
-                $uploadedFile = $request->file($key);
-                ProcessFileImport::dispatch($uploadedFile, $file, $importType);
+                $importedFiles[$key] = $request->file($key);
             }
         }
+        if (empty($importedFiles)) {
+            return back()->with('error', 'You must upload at least one file.');
+        }
 
-        return back()->with('success', 'Import is in progress.');
+        try {
+            foreach ($importedFiles as $key => $uploadedFile) {
+                $originalFileName = $uploadedFile->getClientOriginalName();
+                $filePath = $uploadedFile->store('imports');
+                ProcessFileImport::dispatch($importType, $key, $filePath, $originalFileName);
+                $importedFilesNames[] = $originalFileName;
+            }
+
+            return redirect()->back()->with(
+                'success',
+                'File(s) imported successfully: ' . implode(', ', $importedFilesNames)
+            );
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
+        }
     }
 }

@@ -58,7 +58,7 @@
                     <select name="permissions[]" class="form-control select2" multiple="multiple" style="width: 100%;">
                         @foreach($permissions as $permission)
                             <option value="{{ $permission->name }}" {{ $user->permission->pluck('name')->contains($permission->name) ? 'selected' : '' }}>
-                                {{ ucfirst($permission->name) }}
+                                {{ $permission->name }}
                             </option>
                         @endforeach
                     </select>

@@ -6,25 +6,25 @@
             <h3 class="box-title">Import Data</h3>
         </div>
         <div class="box-body">
-            <!-- Display success message -->
+            {{-- Display Success Message --}}
             @if(session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
             @endif
 
-            <!-- Display error message -->
+            {{-- Display Error Message --}}
             @if(session('error'))
                 <div class="alert alert-danger">
                     {{ session('error') }}
                 </div>
             @endif
 
-            <!-- Validation error messages -->
+            {{-- Display Validation Errors --}}
             @if($errors->any())
                 <div class="alert alert-danger">
                     <ul>
-                        @foreach($errors->all() as $error)
+                        @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
@@ -43,9 +43,7 @@
                     </select>
                 </div>
 
-                <div id="file_inputs">
-                    <!-- Dynamic file inputs will be added here -->
-                </div>
+                <div id="file_inputs"></div>
 
                 <button type="submit" class="btn btn-primary">Start Import</button>
             </form>
@@ -57,7 +55,7 @@
     <script>
         const importConfig = @json($importTypes);
 
-        document.getElementById('import_type').addEventListener('change', function() {
+        document.getElementById('import_type').addEventListener('change', function () {
             const importType = this.value;
             const fileInputs = document.getElementById('file_inputs');
             fileInputs.innerHTML = ''; // Clear previous inputs
@@ -74,7 +72,7 @@
                     fileInputs.innerHTML += `
                     <div class="form-group">
                         <label for="${key}">${file.label}</label>
-                        <input type="file" name="${key}" id="${key}" class="form-control" required>
+                        <input type="file" name="${key}" id="${key}" class="form-control" data-required="true">
                         <small class="form-text text-muted">
                             <strong>Required Headers:</strong> ${headers}
                         </small>
@@ -83,5 +81,22 @@
                 });
             }
         });
+
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const requiredInputs = document.querySelectorAll('[data-required="true"]');
+            let atLeastOneFileUploaded = false;
+
+            requiredInputs.forEach(input => {
+                if (input.files.length > 0) {
+                    atLeastOneFileUploaded = true;
+                }
+            });
+
+            if (!atLeastOneFileUploaded) {
+                e.preventDefault(); // Stop form submission
+                alert('Please upload at least one file.');
+            }
+        });
     </script>
 @stop
+

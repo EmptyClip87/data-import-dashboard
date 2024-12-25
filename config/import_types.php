@@ -5,7 +5,7 @@ return [
         'label' => 'Import Orders',
         'permission_required' => 'import-orders',
         'files' => [
-            'standard' => [
+            'standard_order' => [
                 'label' => 'Standard',
                 'headers_to_db' => [
                     'order_date' => [
@@ -16,12 +16,12 @@ return [
                     'channel' => [
                         'label' => 'Channel',
                         'type' => 'string',
-                        'validation' => ['required', 'in' => ['PT', 'Amazon']],
+                        'validation' => ['required', 'in' => ['PT', 'Amazon', 'eBay']],
                     ],
                     'sku' => [
                         'label' => 'SKU',
                         'type' => 'string',
-                        'validation' => ['required', 'exists' => ['table' => 'products', 'column' => 'sku']],
+                        'validation' => ['required'],
                     ],
                     'item_description' => [
                         'label' => 'Item Description',
@@ -33,7 +33,7 @@ return [
                         'type' => 'string',
                         'validation' => ['required'],
                     ],
-                    'so_num' => [
+                    'so' => [
                         'label' => 'SO#',
                         'type' => 'string',
                         'validation' => ['required'],
@@ -62,7 +62,7 @@ return [
         'label' => 'Import Invoices',
         'permission_required' => 'import-invoices',
         'files' => [
-            'basic' => [
+            'basic_invoice' => [
                 'label' => 'Basic Invoice',
                 'headers_to_db' => [
                     'invoice_date' => [
@@ -78,17 +78,17 @@ return [
                     'invoice_number' => [
                         'label' => 'Invoice Number',
                         'type' => 'string',
-                        'validation' => ['required', 'in' => ['PT', 'Amazon']],
+                        'validation' => ['required'],
                     ],
-                    'po_num' => [
+                    'po' => [
                         'label' => 'PO#',
                         'type' => 'string',
-                        'validation' => ['required', 'exists' => ['table' => 'products', 'column' => 'sku']],
+                        'validation' => ['required'],
                     ],
                     'item' => [
                         'label' => 'Item',
                         'type' => 'string',
-                        'validation' => ['nullable'],
+                        'validation' => ['required'],
                     ],
                     'payment_method' => [
                         'label' => 'Payment Method',
@@ -113,7 +113,7 @@ return [
                 ],
                 'update_or_create' => ['invoice_number', 'po_num'],
             ],
-            'tax' => [
+            'tax_invoice' => [
                 'label' => 'Tax Invoice',
                 'headers_to_db' => [
                     'invoice_date' => [
@@ -124,17 +124,17 @@ return [
                     'invoice_number' => [
                         'label' => 'Invoice Number',
                         'type' => 'string',
-                        'validation' => ['required', 'in' => ['PT', 'Amazon']],
+                        'validation' => ['required'],
                     ],
                     'gst_id' => [
                         'label' => 'GST ID',
                         'type' => 'string',
-                        'validation' => ['required', 'exists' => ['table' => 'products', 'column' => 'sku']],
+                        'validation' => ['required'],
                     ],
                     'action_id' => [
                         'label' => 'Action ID',
                         'type' => 'string',
-                        'validation' => ['nullable'],
+                        'validation' => ['required'],
                     ],
                     'amount' => [
                         'label' => 'Amount',
@@ -152,7 +152,7 @@ return [
                         'validation' => ['required'],
                     ],
                 ],
-                'update_or_create' => ['gst_id', 'action_id'],
+                'update_or_create' => ['invoice_number', 'gst_id'],
             ],
         ],
     ],
