@@ -12,6 +12,7 @@ use Maatwebsite\Excel\Concerns\SkipsFailures;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 abstract class BaseImport implements SkipsOnFailure
+
 {
     use SkipsFailures;
     use RemembersRowNumber;
@@ -26,13 +27,13 @@ abstract class BaseImport implements SkipsOnFailure
     }
 
     /**
-     * Validate headers against the configuration.
-     *
-     * @param array $fileHeaders
+     * @param array $data
+     * @return void
      * @throws Exception
      */
-    protected function validateHeaders(array $fileHeaders): void
+    protected function validateHeaders(array $data): void
     {
+        $fileHeaders = array_keys($data);
         $missingHeaders = array_diff($this->expectedHeaders, $fileHeaders);
         $extraHeaders = array_diff($fileHeaders, $this->expectedHeaders);
 

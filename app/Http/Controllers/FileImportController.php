@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Import;
-use App\Imports\StandardOrderImport;
 use App\Jobs\ProcessFileImport;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
-use Maatwebsite\Excel\Facades\Excel;
 
 class FileImportController extends Controller
 {
@@ -33,12 +29,12 @@ class FileImportController extends Controller
     }
 
     /**
-     * Handle file upload
+     * Handle file import
      *
      * @param Request $request
      * @return RedirectResponse
      */
-    public function process(Request $request)
+    public function process(Request $request): RedirectResponse
     {
         // Validate import type
         $request->validate([

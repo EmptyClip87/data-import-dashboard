@@ -51,15 +51,13 @@ class ProcessFileImport implements ShouldQueue
         session(['current_import_id' => $import->id]);
 
         try {
-            $importClass = ImportFactory::create($this->fileKey);
-            Excel::import($importClass, $this->originalFilePath);
+            Excel::import(ImportFactory::create($this->fileKey), $this->originalFilePath);
 
             $import->status = 'successful';
             $import->save();
         } catch (\Exception $e) {
             $import->status = 'unsuccessful';
             $import->save();
-
             throw $e;
         }
     }

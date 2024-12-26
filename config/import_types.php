@@ -105,7 +105,7 @@ return [
                         'type' => 'double',
                         'validation' => ['required'],
                     ],
-                    'total_price' => [
+                    'total' => [
                         'label' => 'Total Price',
                         'type' => 'double',
                         'validation' => ['required'],
