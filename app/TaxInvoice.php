@@ -15,4 +15,9 @@ class TaxInvoice extends Model
         'deduction',
         'total'
     ];
+
+    public function logs()
+    {
+        return $this->morphMany(ImportLog::class, 'row');
+    }
 }

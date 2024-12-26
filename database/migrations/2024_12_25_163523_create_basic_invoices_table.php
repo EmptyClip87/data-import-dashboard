@@ -18,14 +18,14 @@ class CreateBasicInvoicesTable extends Migration
             $table->date('invoice_date');
             $table->date('due_date');
             $table->string('invoice_number');
-            $table->string('po_num');
+            $table->string('po');
             $table->string('item');
             $table->string('payment_method');
             $table->double('price');
             $table->double('tax');
             $table->double('total_price');
             $table->timestamps();
-            $table->unique(['invoice_number', 'po_num'], 'invoice_number_po_num_unique');
+            $table->unique(['invoice_number', 'po'], 'invoice_number_po_unique');
         });
     }
 

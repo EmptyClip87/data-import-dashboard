@@ -10,11 +10,16 @@ class BasicInvoice extends Model
         'invoice_date',
         'due_date',
         'invoice_number',
-        'po_num',
+        'po',
         'item',
         'payment_method',
         'price',
         'tax',
         'total_price'
     ];
+
+    public function logs()
+    {
+        return $this->morphMany(ImportLog::class, 'row');
+    }
 }

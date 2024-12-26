@@ -20,12 +20,12 @@ class CreateStandardOrdersTable extends Migration
             $table->string('sku');
             $table->string('item_description')->nullable();
             $table->string('origin');
-            $table->string('so_num');
+            $table->string('so');
             $table->double('cost');
             $table->double('shipping_cost');
             $table->double('total_price');
             $table->timestamps();
-            $table->unique(['so_num', 'sku'], 'so_num_sku_unique');
+            $table->unique(['so', 'sku'], 'so_sku_unique');
         });
     }
 

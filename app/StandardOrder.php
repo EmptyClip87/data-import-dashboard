@@ -12,9 +12,14 @@ class StandardOrder extends Model
         'sku',
         'item_description',
         'origin',
-        'so_num',
+        'so',
         'cost',
         'shipping_cost',
         'total_price'
     ];
+
+    public function logs()
+    {
+        return $this->morphMany(ImportLog::class, 'row');
+    }
 }

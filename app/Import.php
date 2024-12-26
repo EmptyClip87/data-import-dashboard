@@ -14,9 +14,12 @@ class Import extends Model
     {
         return $this->belongsTo(User::class);
     }
-
     public function import_logs()
     {
         return $this->hasMany(ImportLog::class);
+    }
+    public function audits()
+    {
+        return $this->hasMany(Audit::class);
     }
 }

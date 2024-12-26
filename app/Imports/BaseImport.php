@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Audit;
 use App\ImportLog;
 use Exception;
 use Illuminate\Support\Facades\Config;
@@ -51,14 +52,25 @@ abstract class BaseImport implements SkipsOnFailure
      * @param mixed $newValue
      * @param string|null $errorMessage
      */
-    protected function logImport(int $rowNumber, string $column, $oldValue, $newValue, ?string $errorMessage = null): void
+    protected function logImport($row, int $rowNumber, string $column, $oldValue, $newValue, ?string $errorMessage = null): void
     {
-        ImportLog::create([
+        $importLog = ImportLog::create([
             'import_id' => $this->importId,
-            'row_number' => $rowNumber,
             'column' => $column,
             'old_value' => json_encode($oldValue),
             'new_value' => json_encode($newValue),
+        ]);
+        $importLog->row()->associate($row);
+        $importLog->save();
+    }
+
+    protected function logAudit(int $rowNumber, string $column, $error_value, string $errorMessage): void
+    {
+        Audit::create([
+            'import_id' => $this->importId,
+            'row_number' => $rowNumber,
+            'column' => $column,
+            'error_value' => json_encode($error_value),
             'error_message' => $errorMessage,
         ]);
     }

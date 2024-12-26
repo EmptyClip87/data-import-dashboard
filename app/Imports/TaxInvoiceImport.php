@@ -49,7 +49,7 @@ class TaxInvoiceImport extends BaseImport implements
                     $newValue = $invoiceDate->format('Y-m-d');
                 }
                 if ($oldValue != $newValue) {
-                    $this->logImport($this->getRowNumber(), $column, $oldValue, $newValue);
+                    $this->logImport($existingInvoice, $this->getRowNumber(), $column, $newValue, $oldValue, $newValue);
                 }
             }
 
@@ -104,7 +104,7 @@ class TaxInvoiceImport extends BaseImport implements
         foreach ($failures as $failure) {
             $newValue = json_encode($failure->values()[$failure->attribute()]);
             $errorMessages = implode(', ', $failure->errors());
-            $this->logImport($failure->row(), $failure->attribute(), null, $newValue, $errorMessages);
+            $this->logAudit($failure->row(), $failure->attribute(), $newValue, $errorMessages);
         }
     }
 

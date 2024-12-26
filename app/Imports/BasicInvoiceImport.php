@@ -40,7 +40,7 @@ class BasicInvoiceImport extends BaseImport implements
         $invoiceDate = $this->convertExcelDate($row['invoice_date']);
         $dueDate = $this->convertExcelDate($row['due_date']);
         $existingInvoice = BasicInvoice::where('invoice_number', $row['invoice_number'])
-            ->where('po_num', $row['po'])
+            ->where('po', $row['po'])
             ->first();
 
         if ($existingInvoice) {
@@ -52,7 +52,7 @@ class BasicInvoiceImport extends BaseImport implements
                     $newValue = $dueDate->format('Y-m-d');
                 }
                 if ($oldValue != $newValue) {
-                    $this->logImport($this->getRowNumber(), $column, $oldValue, $newValue);
+                    $this->logImport($existingInvoice, $this->getRowNumber(), $column, $newValue, $oldValue, $newValue);
                 }
             }
 
@@ -69,7 +69,7 @@ class BasicInvoiceImport extends BaseImport implements
             'invoice_date' => $invoiceDate->format('Y-m-d'),
             'due_date' => $dueDate->format('Y-m-d'),
             'invoice_number' => $row['invoice_number'],
-            'po_num' => $row['po'],
+            'po' => $row['po'],
             'item' => $row['item'],
             'payment_method' => $row['payment_method'],
             'price' => $row['price'],
@@ -111,7 +111,7 @@ class BasicInvoiceImport extends BaseImport implements
         foreach ($failures as $failure) {
             $newValue = json_encode($failure->values()[$failure->attribute()]);
             $errorMessages = implode(', ', $failure->errors());
-            $this->logImport($failure->row(), $failure->attribute(), null, $newValue, $errorMessages);
+            $this->logAudit($failure->row(), $failure->attribute(), $newValue, $errorMessages);
         }
     }
 

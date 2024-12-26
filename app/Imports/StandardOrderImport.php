@@ -38,7 +38,7 @@ class StandardOrderImport extends BaseImport implements
     public function model(array $row): ?StandardOrder
     {
         $date = $this->convertExcelDate($row['order_date']);
-        $existingOrder = StandardOrder::where('so_num', $row['so'])
+        $existingOrder = StandardOrder::where('so', $row['so'])
             ->where('sku', $row['sku'])
             ->first();
 
@@ -49,7 +49,7 @@ class StandardOrderImport extends BaseImport implements
                     $newValue = $date->format('Y-m-d');
                 }
                 if ($oldValue != $newValue) {
-                    $this->logImport($this->getRowNumber(), $column, $oldValue, $newValue);
+                    $this->logImport($existingOrder, $this->getRowNumber(), $column, $newValue, $oldValue, $newValue);
                 }
             }
 
@@ -68,7 +68,7 @@ class StandardOrderImport extends BaseImport implements
             'sku' => $row['sku'],
             'item_description' => $row['item_description'] ?? null,
             'origin' => $row['origin'],
-            'so_num' => $row['so'],
+            'so' => $row['so'],
             'cost' => $row['cost'],
             'shipping_cost' => $row['shipping_cost'],
             'total_price' => $row['total_price'],
@@ -106,7 +106,7 @@ class StandardOrderImport extends BaseImport implements
         foreach ($failures as $failure) {
             $newValue = json_encode($failure->values()[$failure->attribute()]);
             $errorMessages = implode(', ', $failure->errors());
-            $this->logImport($failure->row(), $failure->attribute(), null, $newValue, $errorMessages);
+            $this->logAudit($failure->row(), $failure->attribute(), $newValue, $errorMessages);
         }
     }
 
