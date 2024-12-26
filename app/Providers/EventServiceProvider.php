@@ -34,22 +34,24 @@ class EventServiceProvider extends ServiceProvider
             $importTypes = config('import_types');
 
             $files = [];
-            foreach ($importTypes as $importType) {
-                foreach ($importType['files'] as $key => $file) {
+            foreach ($importTypes as $importTypeKey => $importTypeValue) {
+                foreach ($importTypeValue['files'] as $key => $file) {
                     $files[$key] = [
                         'file' => $file,
-                        'type' => $importType['label'],
+                        'type' => $importTypeKey,
+                        'type-label' => $importTypeValue['label'],
                     ];
                 }
             }
 
             $submenuData = [];
             foreach ($files as $fileKey => $file) {
+                $uri = 'files/' . $file['type'] . '/' . str_replace('_', '-', $fileKey);
                 $submenuData[] = [
-                    'text' => $file['type'] . ' - ' . $file['file']['label'],
-                    'url'  => 'files/' . str_replace('_', '-', $fileKey),
+                    'text' => $file['type-label'] . ' - ' . $file['file']['label'],
+                    'url'  => $uri,
                     'icon' => 'fas fa-fw fa-file',
-                    "href" => url('') . "/files/" . str_replace('_', '-', $fileKey),
+                    "href" => url('') . '/' . $uri,
                     "search" => false,
                     "active" => false,
                     "classes" => [],
