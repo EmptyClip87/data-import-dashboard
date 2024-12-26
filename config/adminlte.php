@@ -133,12 +133,12 @@ return [
             'submenu' => [
                 [
                     'text' => 'Users',
-                    'url'  => '/users',
+                    'url'  => 'users',
                     'icon' => 'fas fa-fw fa-user',
                 ],
                 [
                     'text' => 'Permissions',
-                    'url'  => '/permissions',
+                    'url'  => 'permissions',
                     'icon' => 'fas fa-fw fa-cog',
                 ],
             ],
@@ -150,8 +150,8 @@ return [
         ],
         [
             'text' => 'Imported Data',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-line-chart',
+            'icon' => 'fas fa-fw fa-chart-line',
+            'submenu' => [],
         ],
         [
             'text' => 'Imports',
