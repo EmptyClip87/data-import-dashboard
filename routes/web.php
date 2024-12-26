@@ -11,8 +11,9 @@
 |
 */
 
-
 use App\Http\Controllers\FileImportController;
+use App\Http\Controllers\ImportedDataController;
+
 
 Auth::routes();
 
@@ -28,3 +29,9 @@ Route::middleware(['role:admin'])->group(function () {
 
 Route::get('/import', [FileImportController::class, 'index'])->name('imports.index');
 Route::post('/import/process', [FileImportController::class, 'process'])->name('imports.process');
+
+Route::get('/files/{type}/{file}', [ImportedDataController::class, 'index'])->name('files.index');
+Route::delete('/files/{type}/{file}/{id}', [ImportedDataController::class, 'destroy'])->name('files.delete');
+Route::get('/files/{type}/{file}/{id}/logs', [ImportedDataController::class, 'logs'])->name('files.logs');
+Route::get('/files/{type}/{file}/export', [ImportedDataController::class, 'export'])->name('files.export');
+

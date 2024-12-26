@@ -54,7 +54,7 @@ return [
                         'validation' => ['required'],
                     ],
                 ],
-                'update_or_create' => ['so_num', 'sku'],
+                'update_or_create' => ['so', 'sku'],
             ],
         ],
     ],
@@ -111,7 +111,7 @@ return [
                         'validation' => ['required'],
                     ],
                 ],
-                'update_or_create' => ['invoice_number', 'po_num'],
+                'update_or_create' => ['invoice_number', 'po'],
             ],
             'tax_invoice' => [
                 'label' => 'Tax Invoice',
